@@ -119,6 +119,17 @@ class Settings(BaseSettings):
             raise ValueError("API_SECRET_KEY must be at least 16 characters")
         return v
 
+    @field_validator("database_url")
+    @classmethod
+    def _normalize_db_url(cls, v: str) -> str:
+        # Managed Postgres (Render/Heroku/etc.) hands out `postgres://` or
+        # `postgresql://`. Our async engine needs the asyncpg driver.
+        if v.startswith("postgres://"):
+            v = v.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif v.startswith("postgresql://"):
+            v = v.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return v
+
 
 @lru_cache
 def get_settings() -> Settings:

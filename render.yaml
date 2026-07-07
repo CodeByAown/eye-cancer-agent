@@ -1,0 +1,53 @@
+# Render Blueprint — provisions backend (FastAPI) + frontend (Next.js) + Postgres.
+# Deploy: Render Dashboard → New → Blueprint → connect this repo.
+# See DEPLOY.md for the exact steps (two env vars are filled after first deploy).
+
+databases:
+  - name: amvp-db
+    plan: free
+
+services:
+  # ---------------- Backend (FastAPI) ----------------
+  - type: web
+    name: amvp-api
+    runtime: python
+    plan: free # NOTE: the fundus model is memory-heavy; upgrade to Starter if the free 512MB OOMs
+    rootDir: apps/api
+    buildCommand: pip install -e .
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: APP_ENV
+        value: staging # non-production → auto-creates DB tables (no migration step)
+      - key: DEV_AUTH_BYPASS
+        value: "true"
+      - key: AI_PROVIDER
+        value: openai
+      - key: OPENAI_API_KEY
+        sync: false # set your sk-... key in the dashboard (never committed)
+      - key: API_SECRET_KEY
+        generateValue: true # Render generates a secure value
+      - key: DATABASE_URL
+        fromDatabase:
+          name: amvp-db
+          property: connectionString
+      - key: API_CORS_ORIGINS
+        sync: false # set to the frontend URL after first deploy (e.g. https://amvp-web.onrender.com)
+
+  # ---------------- Frontend (Next.js) ----------------
+  - type: web
+    name: amvp-web
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: corepack enable && pnpm install --frozen-lockfile && pnpm --filter @amvp/web build
+    startCommand: corepack enable && pnpm --filter @amvp/web start
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NEXT_PUBLIC_APP_NAME
+        value: AI Medical Vision Platform
+      - key: NEXT_PUBLIC_API_URL
+        sync: false # set to the backend URL after first deploy (e.g. https://amvp-api.onrender.com)
