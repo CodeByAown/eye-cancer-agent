@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.eggs/
+
+# Builds
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# Env & secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Data / models / storage
+services/inference/weights/
+apps/api/weights/
+storage/
+test-storage/
+**/test-storage/
+*.pt
+*.pth
+*.onnx
+*.safetensors
+*.svs
+*.dcm
+
+# Databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Logs & coverage
+*.log
+logs/
+coverage/
+.coverage
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens (docs/12-uiux-guide.md) ─────────────────────────────
+   Dark is the default/base theme; .light overrides. Colors are HSL triplets
+   so Tailwind can apply opacity modifiers (e.g. bg-primary/20). */
+@layer base {
+  :root {
+    --radius: 14px;
+
+    --background: 213 33% 6%;
+    --foreground: 210 20% 96%;
+    --surface: 219 39% 11%;
+    --surface-raised: 217 34% 14%;
+
+    --primary: 172 80% 40%; /* medical teal */
+    --primary-foreground: 210 40% 98%;
+    --accent: 239 84% 67%; /* indigo */
+    --accent-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 16% 62%;
+
+    --border: 216 34% 20%;
+    --input: 216 34% 20%;
+    --ring: 172 80% 45%;
+
+    --success: 142 71% 45%;
+    --warning: 38 92% 50%;
+    --danger: 0 84% 60%;
+    --info: 217 91% 60%;
+
+    --glass: 210 40% 98% / 0.04;
+    --glass-border: 210 40% 98% / 0.08;
+  }
+
+  .light {
+    --background: 216 43% 98%;
+    --foreground: 222 47% 11%;
+    --surface: 0 0% 100%;
+    --surface-raised: 216 33% 97%;
+
+    --primary: 172 82% 34%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 239 84% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 216 33% 94%;
+    --muted-foreground: 215 16% 40%;
+
+    --border: 216 24% 88%;
+    --input: 216 24% 88%;
+    --ring: 172 82% 40%;
+
+    --glass: 222 47% 11% / 0.03;
+    --glass-border: 222 47% 11% / 0.08;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  ::selection {
+    @apply bg-primary/30;
+  }
+}
+
+@layer components {
+  /* Frosted glass surface used across dashboards, HUD, cards */
+  .glass {
+    background: hsl(var(--glass));
+    border: 1px solid hsl(var(--glass-border));
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+  }
+
+  .glass-strong {
+    background: hsl(var(--surface) / 0.7);
+    border: 1px solid hsl(var(--glass-border));
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+  }
+
+  /* Ambient gradient mesh for hero / auth backgrounds */
+  .mesh-bg {
+    background-image:
+      radial-gradient(50% 50% at 15% 20%, hsl(var(--primary) / 0.18), transparent 60%),
+      radial-gradient(50% 50% at 85% 25%, hsl(var(--accent) / 0.16), transparent 60%),
+      radial-gradient(60% 60% at 50% 100%, hsl(var(--accent) / 0.1), transparent 60%);
+  }
+
+  .text-gradient {
+    @apply from-primary to-accent bg-gradient-to-r bg-clip-text text-transparent;
+  }
+}
+
+/* Print: isolate the clinical report into a clean, paper-like document */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  body * {
+    visibility: hidden !important;
+  }
+  #clinical-report,
+  #clinical-report * {
+    visibility: visible !important;
+  }
+  #clinical-report {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: none !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/* Respect reduced-motion globally */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

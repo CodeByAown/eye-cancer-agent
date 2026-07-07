@@ -1,0 +1,23 @@
+{
+  "name": "ai-medical-vision-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Production-grade multi-agent AI Medical Vision Platform (eye + cancer)",
+  "packageManager": "pnpm@9.15.9",
+  "engines": {
+    "node": ">=20.11.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @amvp/web dev",
+    "build": "pnpm --filter @amvp/web build",
+    "lint": "pnpm --filter @amvp/web lint",
+    "typecheck": "pnpm -r typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.6.6"
+  }
+}
