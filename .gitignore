@@ -21,10 +21,11 @@ build/
 .env.*.local
 !.env.example
 
-# Data / models / storage
+# Data / models / storage (upload dirs only — NOT the app.services.storage package)
 services/inference/weights/
 apps/api/weights/
-storage/
+/storage/
+apps/api/storage/
 test-storage/
 **/test-storage/
 *.pt
