@@ -32,7 +32,9 @@ class LocalStorage(Storage):
         path = self._path(key)
         path.parent.mkdir(parents=True, exist_ok=True)
         await anyio.Path(path).write_bytes(data)
-        return StoredObject(key=key, url=self.url_for(key), size=len(data), content_type=content_type)
+        return StoredObject(
+            key=key, url=self.url_for(key), size=len(data), content_type=content_type
+        )
 
     async def get(self, key: str) -> bytes:
         return await anyio.Path(self._path(key)).read_bytes()

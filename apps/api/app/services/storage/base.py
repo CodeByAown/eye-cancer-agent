@@ -16,7 +16,9 @@ class Storage(abc.ABC):
     """Abstract object storage. Keys are POSIX-style paths, e.g. 'scans/<uuid>.jpg'."""
 
     @abc.abstractmethod
-    async def put(self, key: str, data: bytes, *, content_type: str = "application/octet-stream") -> StoredObject:
+    async def put(
+        self, key: str, data: bytes, *, content_type: str = "application/octet-stream"
+    ) -> StoredObject:
         ...
 
     @abc.abstractmethod

@@ -1,10 +1,12 @@
-"""Eye model selection by scope.
+"""Eye model selection by scope (hybrid architecture).
 
-- FUNDUS  → FundusDrOnnxModel   (real ResNet50/APTOS specialist, ONNX)
-- ANTERIOR → OpenAIVisionEyeModel (external-eye observation; no specialist ONNX
-             exists publicly for external/webcam eyes — see docs/01-research.md)
+- FUNDUS   → FundusDrOnnxModel    (real self-hosted ResNet50/APTOS DR classifier)
+- ANTERIOR → OpenAIVisionEyeModel (structured external-eye assessment via vision;
+             a laptop/phone camera can only see the external eye, so this is the
+             appropriate tool — no free-hostable specialist model exists for it)
 
-OpenAI is used only for narration/report/chat, never as the fundus classifier.
+OpenAI is used for the external-eye assessment and all narration; the fundus
+classifier is a real self-hosted model.
 """
 
 from __future__ import annotations

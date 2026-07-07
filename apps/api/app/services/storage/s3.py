@@ -18,7 +18,8 @@ class S3Storage(Storage):
             import boto3  # noqa: PLC0415
         except ImportError as exc:  # pragma: no cover
             raise RuntimeError(
-                "S3 storage selected but boto3 is not installed. Install extra: pip install '.[storage-s3]'"
+                "S3 storage selected but boto3 is not installed. "
+                "Install extra: pip install '.[storage-s3]'"
             ) from exc
 
         if not settings.s3_bucket:
@@ -41,7 +42,9 @@ class S3Storage(Storage):
                 Bucket=self.bucket, Key=key, Body=data, ContentType=content_type
             )
         )
-        return StoredObject(key=key, url=self.url_for(key), size=len(data), content_type=content_type)
+        return StoredObject(
+            key=key, url=self.url_for(key), size=len(data), content_type=content_type
+        )
 
     async def get(self, key: str) -> bytes:
         def _get() -> bytes:

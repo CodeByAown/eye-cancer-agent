@@ -22,6 +22,9 @@ export interface TrackingFrame {
 
 export interface TrackingSummary {
   faceDetected: boolean;
+  eyesLocked: boolean; // both eyes tracked
+  faceFraction: number; // 0..1 — face bbox width / frame width (proxy for distance)
+  distance: "far" | "ok" | "close"; // derived from faceFraction
   stability: number; // 0..100
   alignment: number; // 0..100
   lighting: "low" | "ok" | "good";
@@ -30,6 +33,9 @@ export interface TrackingSummary {
 
 const INITIAL_SUMMARY: TrackingSummary = {
   faceDetected: false,
+  eyesLocked: false,
+  faceFraction: 0,
+  distance: "far",
   stability: 0,
   alignment: 0,
   lighting: "low",
@@ -140,8 +146,16 @@ export function useFaceTracking(videoRef: React.RefObject<HTMLVideoElement>, act
           if (now - lastSummaryAt > 120) {
             lastSummaryAt = now;
             const g = frameRef.current.geometry;
+            const eyesLocked = Boolean(g?.left && g?.right);
+            const faceFraction = g?.bbox?.w ?? 0;
+            // Comfortable framing for an eye scan: face spans ~35–75% of frame.
+            const distance: TrackingSummary["distance"] =
+              faceFraction < 0.32 ? "far" : faceFraction > 0.8 ? "close" : "ok";
             setSummary({
               faceDetected: Boolean(g),
+              eyesLocked,
+              faceFraction,
+              distance,
               stability: Math.round(stabilityEma * 100),
               alignment: Math.round(alignmentScore(frameRef.current.pose ?? undefined) * 100),
               lighting,
